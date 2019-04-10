@@ -63,7 +63,7 @@
     <nav class="top-navigation">
 
         <router-link :to="{ name: 'home'}">
-            <span class="logo">Roast</span>
+            <span class="logo">Cafe</span>
         </router-link>
 
         <ul class="links">

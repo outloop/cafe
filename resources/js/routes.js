@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Vuelidate from 'vuelidate'
 
 Vue.use(VueRouter);
+Vue.use(Vuelidate);
 
 import Layout from './pages/layout'
 import Home from './pages/Home'
@@ -23,7 +25,12 @@ export default new VueRouter({
                     path: 'cafes/new',
                     name: 'newcafe',
                     component: Vue.component('NewCafe', NewCafe)
-                }
+                },
+                {
+                    path: 'cafes',
+                    name: 'cafes',
+                    component: Vue.component('Cafes', Home)
+                },
             ]
         }
     ]
