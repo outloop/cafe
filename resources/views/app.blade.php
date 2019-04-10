@@ -16,6 +16,7 @@
     <router-view></router-view>
 </div>
 
+<script src="https://webapi.amap.com/maps?v=1.4.14&key={{env('GAODE_MAPS_JS_API_KEY')}}"></script>
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 </body>
 

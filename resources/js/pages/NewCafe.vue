@@ -82,7 +82,6 @@
         methods: {
             submitNewCafe: function () {
                 this.$v.$touch();
-                console.log(this.$v);
                 if (!this.$v.$invalid) {
                     this.$store.dispatch('addCafe', {
                         name: this.name,

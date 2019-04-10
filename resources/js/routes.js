@@ -8,6 +8,7 @@ Vue.use(Vuelidate);
 import Layout from './pages/layout'
 import Home from './pages/Home'
 import NewCafe from './pages/NewCafe'
+import Cafes from './pages/Cafes'
 
 export default new VueRouter({
     routes: [
@@ -29,7 +30,7 @@ export default new VueRouter({
                 {
                     path: 'cafes',
                     name: 'cafes',
-                    component: Vue.component('Cafes', Home)
+                    component: Vue.component('Cafes', Cafes)
                 },
             ]
         }

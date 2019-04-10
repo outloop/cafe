@@ -21,3 +21,8 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/auth/{social}/callback', 'Web\AuthenticationController@getSocialCallback');
 });
 
+Route::get('/test', function (){
+    $gaode = new \App\Utilities\Maps\Gaode();
+    $res = $gaode->geocode('越秀区珠江宾馆', '广州市','广东省');
+    var_dump($res);
+});

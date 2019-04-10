@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Cafe;
+use App\Utilities\Maps\Gaode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -35,7 +36,7 @@ class CafesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Gaode $gaode)
     {
         //
         $cafe = new Cafe();
@@ -44,6 +45,12 @@ class CafesController extends Controller
         $cafe->city = $request->get('city');
         $cafe->state = $request->get('state');
         $cafe->zip = $request->get('zip');
+
+        $location = $gaode->geocode($cafe->address, $cafe->city, $cafe->state);
+        if ($location) {
+            $cafe->latitude = $location['lat'];
+            $cafe->longitude = $location['lng'];
+        }
 
         $cafe->save();
 
