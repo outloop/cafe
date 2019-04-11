@@ -35,7 +35,7 @@ class Gaode implements MapContract
         $lat = '';
         $lng = '';
         if ($res && $res->status && isset($res->geocodes) && isset($res->geocodes[0])) {
-            list($lat, $lng) = explode(',', $res->geocodes[0]->location);
+            list($lng, $lat) = explode(',', $res->geocodes[0]->location);
         }
         return compact('lat','lng');
     }

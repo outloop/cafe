@@ -1782,21 +1782,21 @@ __webpack_require__.r(__webpack_exports__);
       // 经度
       type: Number,
       "default": function _default() {
-        return 120.21;
+        return 113.27;
       }
     },
     'longitude': {
       // 纬度
       type: Number,
       "default": function _default() {
-        return 30.29;
+        return 23.13;
       }
     },
     'zoom': {
       // 缩放级别
       type: Number,
       "default": function _default() {
-        return 4;
+        return 5;
       }
     }
   },
@@ -1826,7 +1826,7 @@ __webpack_require__.r(__webpack_exports__);
       for (var i = 0; i < this.cafes.length; i++) {
         // 通过高德地图 API 为每个咖啡店创建点标记并设置经纬度
         var marker = new AMap.Marker({
-          position: AMap.LngLat(parseFloat(this.cafes[i].latitude), parseFloat(this.cafes[i].longitude)),
+          position: new AMap.LngLat(parseFloat(this.cafes[i].longitude), parseFloat(this.cafes[i].latitude)),
           title: this.cafes[i].name
         }); // 将每个点标记放到点标记数组中
 
