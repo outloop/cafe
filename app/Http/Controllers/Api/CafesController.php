@@ -6,6 +6,7 @@ use App\Cafe;
 use App\Http\Requests\StoreCafeRequest;
 use App\Http\Services\CafesService;
 use App\Utilities\Maps\Gaode;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -73,7 +74,7 @@ class CafesController extends Controller
     public function show($id)
     {
         //
-        $cafe = Cafe::where(['id' => $id])->with('brewMethods')->first();
+        $cafe = Cafe::where(['id' => $id])->with('brewMethods')->with('userLike')->first();
         return response()->json($cafe);
     }
 
@@ -109,5 +110,20 @@ class CafesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function like(Cafe $cafe, Request $request)
+    {
+        $cafe->likes()->attach($request->user()->id,  [
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
+        return response()->json(['cafe_liked' => true], 201);
+    }
+
+    public function dislike(Cafe $cafe, Request $request)
+    {
+        $cafe->likes()->detach($request->user()->id);
+        return response(null, 204);
     }
 }

@@ -9,6 +9,7 @@ import Layout from './pages/layout'
 import Home from './pages/Home'
 import NewCafe from './pages/NewCafe'
 import Cafes from './pages/Cafes'
+import Cafe from './pages/Cafe'
 
 export default new VueRouter({
     routes: [
@@ -32,6 +33,11 @@ export default new VueRouter({
                     name: 'cafes',
                     component: Vue.component('Cafes', Cafes)
                 },
+                {
+                    path: 'cafes/:id',
+                    name: 'cafe',
+                    component: Vue.component('cafe', Cafe)
+                }
             ]
         }
     ]

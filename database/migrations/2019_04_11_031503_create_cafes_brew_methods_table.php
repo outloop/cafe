@@ -16,7 +16,7 @@ class CreateCafesBrewMethodsTable extends Migration
         Schema::create('cafes_brew_methods', function (Blueprint $table) {
             $table->integer('cafe_id')->unsigned();
             $table->integer('brew_method_id')->unsigned();
-            $table->unique(['cafe_id', 'brew_method_id'], 'unq_cafe_id_brew_method_id');
+            $table->primary(['cafe_id', 'brew_method_id'], 'prm_cafe_id_brew_method_id');
         });
     }
 
