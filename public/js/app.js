@@ -2924,15 +2924,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  created: function created() {
+    this.$store.dispatch('loadBrewMethods');
+  },
   data: function data() {
     return {
       name: '',
-      address: '',
-      city: '',
-      state: '',
-      zip: ''
+      locations: [],
+      website: '',
+      description: '',
+      roaster: false
     };
   },
   validations: {
@@ -2940,17 +2978,32 @@ __webpack_require__.r(__webpack_exports__);
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
       maxLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["maxLength"])(10)
     },
-    address: {
+    website: {
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
+      url: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["url"]
+    },
+    description: {},
+    roaster: {
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
     },
-    city: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
-    },
-    state: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
-    },
-    zip: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
+    locations: {
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
+      $each: {
+        address: {
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
+        },
+        city: {
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
+        },
+        state: {
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
+        },
+        zip: {
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
+        },
+        name: {},
+        methodsAvailable: {}
+      }
     }
   },
   methods: {
@@ -2960,12 +3013,30 @@ __webpack_require__.r(__webpack_exports__);
       if (!this.$v.$invalid) {
         this.$store.dispatch('addCafe', {
           name: this.name,
-          address: this.address,
-          city: this.city,
-          state: this.state,
-          zip: this.zip
+          locations: this.locations,
+          website: this.website,
+          description: this.description,
+          roaster: this.roaster
         });
       }
+    },
+    removeLocation: function removeLocation(key) {
+      this.locations.splice(key, 1);
+    },
+    addLocation: function addLocation() {
+      this.locations.push({
+        name: '',
+        address: '',
+        city: '',
+        state: '',
+        zip: '',
+        methodsAvailable: []
+      });
+    }
+  },
+  computed: {
+    brewMethods: function brewMethods() {
+      return this.$store.getters.getBrewMethods;
     }
   }
 });
@@ -48712,180 +48783,478 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "page" }, [
     _c("form", [
-      _c("div", { staticClass: "grid-container" }, [
-        _c("div", { staticClass: "grid-x grid-padding-x" }, [
-          _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
-            _c("label", [
-              _vm._v("名称\n                        "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.$v.name.$model,
-                    expression: "$v.name.$model"
-                  }
-                ],
-                attrs: { type: "text", placeholder: "咖啡店名" },
-                domProps: { value: _vm.$v.name.$model },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+      _c(
+        "div",
+        { staticClass: "grid-container" },
+        [
+          _c("div", { staticClass: "grid-x grid-padding-x" }, [
+            _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
+              _c("label", [
+                _vm._v("名称\n                        "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.$v.name.$model,
+                      expression: "$v.name.$model"
                     }
-                    _vm.$set(_vm.$v.name, "$model", $event.target.value)
+                  ],
+                  attrs: { type: "text", placeholder: "咖啡店名" },
+                  domProps: { value: _vm.$v.name.$model },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.$v.name, "$model", $event.target.value)
+                    }
                   }
-                }
-              })
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.$v.name.$dirty && !_vm.$v.name.required,
+                      expression: "$v.name.$dirty && !$v.name.required"
+                    }
+                  ],
+                  staticClass: "validation"
+                },
+                [_vm._v("名称错误")]
+              )
             ]),
             _vm._v(" "),
-            _vm.$v.name.$dirty && !_vm.$v.name.required
-              ? _c("span", { staticClass: "validation" }, [
-                  _vm._v("咖啡店名错误")
+            _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
+              _c("label", [
+                _vm._v("网址\n                        "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.$v.website.$model,
+                      expression: "$v.website.$model"
+                    }
+                  ],
+                  attrs: { type: "text", placeholder: "网址" },
+                  domProps: { value: _vm.$v.website.$model },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.$v.website, "$model", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value:
+                        _vm.$v.website.$dirty &&
+                        (!_vm.$v.website.required || !_vm.$v.website.url),
+                      expression:
+                        "$v.website.$dirty && (!$v.website.required || !$v.website.url)"
+                    }
+                  ],
+                  staticClass: "validation"
+                },
+                [_vm._v("网址错误")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
+              _c("label", [
+                _vm._v("简介\n                        "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.$v.description.$model,
+                      expression: "$v.description.$model"
+                    }
+                  ],
+                  attrs: { type: "text", placeholder: "简介" },
+                  domProps: { value: _vm.$v.description.$model },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.$v.description,
+                        "$model",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.$v.locations.$each.$iter, function(location, key) {
+            return _c("div", { staticClass: "grid-x grid-padding-x" }, [
+              _vm._m(0, true),
+              _vm._v(" "),
+              _c("div", { staticClass: "large-6 medium-6 small-12 cell" }, [
+                _c("label", [
+                  _vm._v("位置名称\n                        "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: location.name.$model,
+                        expression: "location.name.$model"
+                      }
+                    ],
+                    attrs: { type: "text", placeholder: "位置名称" },
+                    domProps: { value: location.name.$model },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(location.name, "$model", $event.target.value)
+                      }
+                    }
+                  })
                 ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
-            _c("label", [
-              _vm._v("地址\n                        "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.$v.address.$model,
-                    expression: "$v.address.$model"
-                  }
-                ],
-                attrs: { type: "text", placeholder: "地址" },
-                domProps: { value: _vm.$v.address.$model },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "large-6 medium-6 small-12 cell" }, [
+                _c("label", [
+                  _vm._v("详细地址\n                        "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: location.address.$model,
+                        expression: "location.address.$model"
+                      }
+                    ],
+                    attrs: { type: "text", placeholder: "详细地址" },
+                    domProps: { value: location.address.$model },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          location.address,
+                          "$model",
+                          $event.target.value
+                        )
+                      }
                     }
-                    _vm.$set(_vm.$v.address, "$model", $event.target.value)
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value:
+                          location.address.$dirty && !location.address.required,
+                        expression:
+                          "location.address.$dirty && !location.address.required"
+                      }
+                    ],
+                    staticClass: "validation"
+                  },
+                  [_vm._v("地址错误")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "large-6 medium-6 small-12 cell" }, [
+                _c("label", [
+                  _vm._v("城市\n                        "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: location.city.$model,
+                        expression: "location.city.$model"
+                      }
+                    ],
+                    attrs: { type: "text", placeholder: "城市" },
+                    domProps: { value: location.city.$model },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(location.city, "$model", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: location.city.$dirty && !location.city.required,
+                        expression:
+                          "location.city.$dirty && !location.city.required"
+                      }
+                    ],
+                    staticClass: "validation"
+                  },
+                  [_vm._v("城市错误")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "large-6 medium-6 small-12 cell" }, [
+                _c("label", [
+                  _vm._v("省份\n                        "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: location.state.$model,
+                        expression: "location.state.$model"
+                      }
+                    ],
+                    attrs: { type: "text", placeholder: "省份" },
+                    domProps: { value: location.state.$model },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(location.state, "$model", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value:
+                          location.state.$dirty && !location.state.required,
+                        expression:
+                          "location.state.$dirty && !location.state.required"
+                      }
+                    ],
+                    staticClass: "validation"
+                  },
+                  [_vm._v("省份错误")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "large-6 medium-6 small-12 cell" }, [
+                _c("label", [
+                  _vm._v("邮编\n                        "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: location.zip.$model,
+                        expression: "location.zip.$model"
+                      }
+                    ],
+                    attrs: { type: "text", placeholder: "邮编" },
+                    domProps: { value: location.zip.$model },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(location.zip, "$model", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: location.zip.$dirty && !location.zip.required,
+                        expression:
+                          "location.zip.$dirty && !location.zip.required"
+                      }
+                    ],
+                    staticClass: "validation"
+                  },
+                  [_vm._v("邮编错误")]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "large-12 medium-12 small-12 cell" },
+                [
+                  _c("label", [_vm._v("支持的冲泡方法")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.brewMethods, function(brewMethod) {
+                    return _c("span", { staticClass: "brew-method" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: location.methodsAvailable.$model,
+                            expression: "location.methodsAvailable.$model"
+                          }
+                        ],
+                        attrs: {
+                          id: "brew-method-" + brewMethod.id + "-" + key,
+                          type: "checkbox"
+                        },
+                        domProps: {
+                          value: brewMethod.id,
+                          checked: Array.isArray(
+                            location.methodsAvailable.$model
+                          )
+                            ? _vm._i(
+                                location.methodsAvailable.$model,
+                                brewMethod.id
+                              ) > -1
+                            : location.methodsAvailable.$model
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = location.methodsAvailable.$model,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = brewMethod.id,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(
+                                    location.methodsAvailable,
+                                    "$model",
+                                    $$a.concat([$$v])
+                                  )
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    location.methodsAvailable,
+                                    "$model",
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(location.methodsAvailable, "$model", $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          attrs: {
+                            for: "brew-method-" + brewMethod.id + "-" + key
+                          }
+                        },
+                        [_vm._v(_vm._s(brewMethod.method))]
+                      )
+                    ])
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button",
+                    on: {
+                      click: function($event) {
+                        return _vm.removeLocation(key)
+                      }
+                    }
+                  },
+                  [_vm._v("移除位置")]
+                )
+              ])
+            ])
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "grid-x grid-padding-x" }, [
+            _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "button",
+                  on: {
+                    click: function($event) {
+                      return _vm.addLocation()
+                    }
                   }
-                }
-              })
+                },
+                [_vm._v("新增位置")]
+              )
             ]),
             _vm._v(" "),
-            _vm.$v.address.$dirty && !_vm.$v.address.required
-              ? _c("span", { staticClass: "validation" }, [_vm._v("地址错误")])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
-            _c("label", [
-              _vm._v("城市\n                        "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.$v.city.$model,
-                    expression: "$v.city.$model"
-                  }
-                ],
-                attrs: { type: "text", placeholder: "城市" },
-                domProps: { value: _vm.$v.city.$model },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+            _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "button",
+                  on: {
+                    click: function($event) {
+                      return _vm.submitNewCafe()
                     }
-                    _vm.$set(_vm.$v.city, "$model", $event.target.value)
                   }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _vm.$v.city.$dirty && !_vm.$v.city.required
-              ? _c("span", { staticClass: "validation" }, [_vm._v("城市错误")])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
-            _c("label", [
-              _vm._v("省份\n                        "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.$v.state.$model,
-                    expression: "$v.state.$model"
-                  }
-                ],
-                attrs: { type: "text", placeholder: "省份" },
-                domProps: { value: _vm.$v.state.$model },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.$v.state, "$model", $event.target.value)
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _vm.$v.state.$dirty && !_vm.$v.state.required
-              ? _c("span", { staticClass: "validation" }, [_vm._v("省份错误")])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
-            _c("label", [
-              _vm._v("邮编\n                        "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.$v.zip.$model,
-                    expression: "$v.zip.$model"
-                  }
-                ],
-                attrs: { type: "text", placeholder: "邮编" },
-                domProps: { value: _vm.$v.zip.$model },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.$v.zip, "$model", $event.target.value)
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _vm.$v.zip.$dirty && !_vm.$v.zip.required
-              ? _c("span", { staticClass: "validation" }, [_vm._v("邮编错误")])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
-            _c(
-              "a",
-              {
-                staticClass: "button",
-                on: {
-                  click: function($event) {
-                    return _vm.submitNewCafe()
-                  }
-                }
-              },
-              [_vm._v("提交")]
-            )
+                },
+                [_vm._v("提交表单")]
+              )
+            ])
           ])
-        ])
-      ])
+        ],
+        2
+      )
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "large-12 medium-12 small-12 cell" }, [
+      _c("h3", [_vm._v("位置")])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -66680,13 +67049,13 @@ __webpack_require__.r(__webpack_exports__);
   getCafe: function getCafe(cafeID) {
     return axios.get(_config__WEBPACK_IMPORTED_MODULE_0__["config"].API_URL + '/cafes/' + cafeID);
   },
-  postCafe: function postCafe(name, address, city, state, zip) {
+  postCafe: function postCafe(name, locations, website, description, roaster) {
     return axios.post(_config__WEBPACK_IMPORTED_MODULE_0__["config"].API_URL + '/cafes', {
       name: name,
-      address: address,
-      city: city,
-      state: state,
-      zip: zip
+      locations: locations,
+      website: website,
+      description: description,
+      roaster: roaster
     });
   }
 });
@@ -67392,7 +67761,7 @@ var cafes = {
           state = _ref3.state,
           dispatch = _ref3.dispatch;
       commit('setCafeAddStatus', 1);
-      _api_cafe__WEBPACK_IMPORTED_MODULE_0__["default"].postCafe(data.name, data.address, data.city, data.state, data.zip).then(function (res) {
+      _api_cafe__WEBPACK_IMPORTED_MODULE_0__["default"].postCafe(data.name, data.locations, data.website, data.description, data.roaster).then(function (response) {
         commit('setCafeAddStatus', 2);
         dispatch('loadCafes');
       })["catch"](function () {

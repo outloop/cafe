@@ -7,13 +7,13 @@ export default {
     getCafe: function (cafeID) {
         return axios.get(config.API_URL + '/cafes/' + cafeID)
     },
-    postCafe: function (name, address, city, state, zip) {
+    postCafe: function (name, locations, website, description, roaster) {
         return axios.post(config.API_URL + '/cafes', {
             name: name,
-            address: address,
-            city: city,
-            state: state,
-            zip: zip
+            locations: locations,
+            website: website,
+            description: description,
+            roaster: roaster
         });
     }
 }

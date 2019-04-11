@@ -7,41 +7,43 @@ export const cafes = {
         cafesLoadStatus: 0,
         cafe: {},
         cafeLoadStatus: 0,
-        cafeAddStatus:0
+        cafeAddStatus: 0
     },
 
     actions: {
-        loadCafes( {commit} ) {
+        loadCafes({commit}) {
             commit('setCafesLoadStatus', 1);
 
             cafeApi.getCafes().then((response) => {
-                commit( 'setCafes', response.data);
-                commit( 'setCafesLoadStatus', 2);
-            }).catch( () => {
-                commit( 'setCafes', []);
-                commit( 'setCafesLoadStatus', 3);
+                commit('setCafes', response.data);
+                commit('setCafesLoadStatus', 2);
+            }).catch(() => {
+                commit('setCafes', []);
+                commit('setCafesLoadStatus', 3);
             });
 
         },
-        loadCafe( {commit}, data ) {
+        loadCafe({commit}, data) {
             commit('setCafeLoadStatus', 1);
 
             cafeApi.getCafe(data.id).then((res) => {
                 commit('setCafe', res.data);
                 commit('setCafeLoadStatus', 2);
-            }).catch(()=>{
+            }).catch(() => {
                 commit('setCafe', {});
                 commit('setCafeLoadStatus', 3);
             });
         },
-        addCafe( {commit, state, dispatch}, data) {
+        addCafe({commit, state, dispatch}, data) {
             commit('setCafeAddStatus', 1);
-            cafeApi.postCafe(data.name, data.address, data.city, data.state, data.zip).then( (res) => {
-                commit('setCafeAddStatus', 2);
-                dispatch('loadCafes');
-            } ).catch( ()=>{
-                commit('setCafeAddStatus', 3);
-            } );
+            cafeApi.postCafe(data.name, data.locations, data.website, data.description, data.roaster)
+                .then(function (response) {
+                    commit('setCafeAddStatus', 2);
+                    dispatch('loadCafes');
+                })
+                .catch(function () {
+                    commit('setCafeAddStatus', 3);
+                });
         }
     },
 
