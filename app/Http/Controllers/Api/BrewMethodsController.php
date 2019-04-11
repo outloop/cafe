@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Cafe;
-use App\Utilities\Maps\Gaode;
+use App\BrewMethod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CafesController extends Controller
+class BrewMethodsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +16,8 @@ class CafesController extends Controller
     public function index()
     {
         //
-        $cafes = Cafe::with('brewMethods')->get();
-        return response()->json($cafes);
+        $brewMethods = BrewMethod::withCount('cafes')->get();
+        return response()->json($brewMethods);
     }
 
     /**
@@ -37,25 +36,9 @@ class CafesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Gaode $gaode)
+    public function store(Request $request)
     {
         //
-        $cafe = new Cafe();
-        $cafe->name = $request->get('name');
-        $cafe->address = $request->get('address');
-        $cafe->city = $request->get('city');
-        $cafe->state = $request->get('state');
-        $cafe->zip = $request->get('zip');
-
-        $location = $gaode->geocode($cafe->address, $cafe->city, $cafe->state);
-        if ($location) {
-            $cafe->latitude = $location['lat'];
-            $cafe->longitude = $location['lng'];
-        }
-
-        $cafe->save();
-
-        return response()->json($cafe, 201);
     }
 
     /**
@@ -67,8 +50,6 @@ class CafesController extends Controller
     public function show($id)
     {
         //
-        $cafe = Cafe::where(['id' => $id])->with('brewMethods')->first();
-        return response()->json($cafe);
     }
 
     /**

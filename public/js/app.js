@@ -1763,6 +1763,7 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../config */ "./resources/js/config.js");
 //
 //
 //
@@ -1776,6 +1777,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     'latitude': {
@@ -1802,7 +1804,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      markers: []
+      markers: [],
+      infoWindwos: []
     };
   },
   mounted: function mounted() {
@@ -1820,14 +1823,27 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     buildMarkers: function buildMarkers() {
-      // 清空点标记数组
+      var img = _config__WEBPACK_IMPORTED_MODULE_0__["config"].APP_URL + '/storage/img/coffee-marker.png';
+      var icon = new AMap.Icon({
+        image: img,
+        imageSize: new AMap.Size(18, 18)
+      }); // 清空点标记数组
+
       this.markers = []; // 遍历所有咖啡店并为每个咖啡店创建点标记
 
       for (var i = 0; i < this.cafes.length; i++) {
         // 通过高德地图 API 为每个咖啡店创建点标记并设置经纬度
         var marker = new AMap.Marker({
           position: new AMap.LngLat(parseFloat(this.cafes[i].longitude), parseFloat(this.cafes[i].latitude)),
-          title: this.cafes[i].name
+          title: this.cafes[i].name,
+          icon: icon
+        });
+        var infoWindow = new AMap.InfoWindow({
+          content: this.cafes[i].name
+        });
+        this.infoWindwos.push(infoWindow);
+        marker.on('click', function () {
+          infoWindow.open(this.getMap(), this.getPosition());
         }); // 将每个点标记放到点标记数组中
 
         this.markers.push(marker);
@@ -2800,6 +2816,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.$store.dispatch('loadCafes');
+    this.$store.dispatch('loadBrewMethods');
   }
 });
 
@@ -66626,6 +66643,25 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/api/brewMethods.js":
+/*!*****************************************!*\
+  !*** ./resources/js/api/brewMethods.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./resources/js/config.js");
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  getBrewMethods: function getBrewMethods() {
+    return axios.get(_config__WEBPACK_IMPORTED_MODULE_0__["config"].API_URL + '/brew-methods');
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/api/cafe.js":
 /*!**********************************!*\
   !*** ./resources/js/api/cafe.js ***!
@@ -67237,19 +67273,73 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "config", function() { return config; });
 var api_url = '';
+var app_url = '';
 
 switch ("development") {
   case 'development':
     api_url = 'http://cafe.test/api/v1';
+    app_url = 'http://cafe.test';
     break;
 
   case 'production':
     api_url = 'http://cafe.test/api/v1';
+    app_url = 'http://cafe.test';
     break;
 }
 
 var config = {
-  API_URL: api_url
+  API_URL: api_url,
+  APP_URL: app_url
+};
+
+/***/ }),
+
+/***/ "./resources/js/modules/brewMethods.js":
+/*!*********************************************!*\
+  !*** ./resources/js/modules/brewMethods.js ***!
+  \*********************************************/
+/*! exports provided: brewMethods */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "brewMethods", function() { return brewMethods; });
+/* harmony import */ var _api_brewMethods__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/brewMethods */ "./resources/js/api/brewMethods.js");
+
+var brewMethods = {
+  state: {
+    brewMethods: [],
+    loadBrewMethodsStatus: 0
+  },
+  actions: {
+    loadBrewMethods: function loadBrewMethods(_ref) {
+      var commit = _ref.commit;
+      commit('setLoadBrewMethodsStatus', 1);
+      _api_brewMethods__WEBPACK_IMPORTED_MODULE_0__["default"].getBrewMethods().then(function (res) {
+        commit('setBrewMethods', res.data);
+        commit('setLoadBrewMethodsStatus', 2);
+      })["catch"](function () {
+        commit('setBrewMethods', []);
+        commit('setLoadBrewMethodsStatus', 3);
+      });
+    }
+  },
+  mutations: {
+    setLoadBrewMethodsStatus: function setLoadBrewMethodsStatus(state) {
+      state.loadBrewMethodsStatus = state;
+    },
+    setBrewMethods: function setBrewMethods(state, data) {
+      state.brewMethods = data;
+    }
+  },
+  getters: {
+    getBrewMethods: function getBrewMethods(state) {
+      return state.brewMethods;
+    },
+    getLoadBrewMethodsStatus: function getLoadBrewMethodsStatus(state) {
+      return state.loadBrewMethodsStatus;
+    }
+  }
 };
 
 /***/ }),
@@ -67738,7 +67828,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_cafes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/cafes */ "./resources/js/modules/cafes.js");
 /* harmony import */ var _modules_users__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/users */ "./resources/js/modules/users.js");
+/* harmony import */ var _modules_brewMethods__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/brewMethods */ "./resources/js/modules/brewMethods.js");
 __webpack_require__(/*! es6-promise */ "./node_modules/es6-promise/dist/es6-promise.js").polyfill();
+
 
 
 
@@ -67748,7 +67840,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     cafes: _modules_cafes__WEBPACK_IMPORTED_MODULE_2__["cafes"],
-    users: _modules_users__WEBPACK_IMPORTED_MODULE_3__["users"]
+    users: _modules_users__WEBPACK_IMPORTED_MODULE_3__["users"],
+    brewMethods: _modules_brewMethods__WEBPACK_IMPORTED_MODULE_4__["brewMethods"]
   }
 }));
 

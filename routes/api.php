@@ -23,5 +23,5 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function (){
     });
 
     Route::resource('cafes', 'Api\CafesController');
-
+    Route::resource('brew-methods', 'Api\BrewMethodsController');
 });

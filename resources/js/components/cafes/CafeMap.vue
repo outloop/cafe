@@ -12,6 +12,7 @@
 </template>
 
 <script>
+    import {config} from '../../config';
     export default {
         props: {
             'latitude': {  // 经度
@@ -35,7 +36,8 @@
         },
         data() {
             return {
-                markers: []
+                markers: [],
+                infoWindwos: []
             }
         },
         mounted() {
@@ -53,6 +55,11 @@
         },
         methods: {
             buildMarkers() {
+                const img = config.APP_URL + '/storage/img/coffee-marker.png';
+                const icon = new AMap.Icon({
+                    image: img,
+                    imageSize: new AMap.Size(18,18)
+                });
                 // 清空点标记数组
                 this.markers = [];
 
@@ -62,9 +69,17 @@
                     // 通过高德地图 API 为每个咖啡店创建点标记并设置经纬度
                     var marker = new AMap.Marker({
                         position: new AMap.LngLat(parseFloat(this.cafes[i].longitude), parseFloat(this.cafes[i].latitude)),
-                        title: this.cafes[i].name
+                        title: this.cafes[i].name,
+                        icon: icon
                     });
 
+                    var infoWindow = new AMap.InfoWindow({
+                        content: this.cafes[i].name
+                    });
+                    this.infoWindwos.push(infoWindow);
+                    marker.on('click', function () {
+                        infoWindow.open(this.getMap(), this.getPosition());
+                    });
                     // 将每个点标记放到点标记数组中
                     this.markers.push(marker);
                 }

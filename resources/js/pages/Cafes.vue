@@ -20,7 +20,8 @@
             CafeMap
         },
         created(){
-            this.$store.dispatch('loadCafes')
+            this.$store.dispatch('loadCafes');
+            this.$store.dispatch('loadBrewMethods');
         }
     }
 </script>
