@@ -3152,6 +3152,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3160,6 +3162,11 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.$store.dispatch('loadCafes');
     this.$store.dispatch('loadBrewMethods');
+  },
+  computed: {
+    cafes: function cafes() {
+      return this.$store.getters.getCafes;
+    }
   }
 });
 
@@ -49528,7 +49535,25 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "large-3 medium-3 small-12 cell" })
+      _c("div", { staticClass: "large-3 medium-3 small-12 cell" }, [
+        _c(
+          "ul",
+          _vm._l(_vm.cafes, function(cafe) {
+            return _c(
+              "li",
+              [
+                _c(
+                  "router-link",
+                  { attrs: { to: { name: "cafe", params: { id: cafe.id } } } },
+                  [_vm._v(_vm._s(cafe.name))]
+                )
+              ],
+              1
+            )
+          }),
+          0
+        )
+      ])
     ])
   ])
 }
@@ -49603,7 +49628,17 @@ var render = function() {
     _c(
       "ul",
       _vm._l(_vm.cafes, function(cafe) {
-        return _c("li", [_vm._v(_vm._s(cafe.name))])
+        return _c(
+          "li",
+          [
+            _c(
+              "router-link",
+              { attrs: { to: { name: "cafe", params: { id: cafe.id } } } },
+              [_vm._v(_vm._s(cafe.name))]
+            )
+          ],
+          1
+        )
       }),
       0
     )
@@ -69408,6 +69443,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuelidate__WEBPACK_IMPORTED_MODUL
 
 
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
+  mode: 'history',
   routes: [{
     path: '/',
     name: 'layout',
@@ -69415,7 +69451,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuelidate__WEBPACK_IMPORTED_MODUL
     children: [{
       path: 'home',
       name: 'home',
-      component: vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('Home', _pages_Home__WEBPACK_IMPORTED_MODULE_4__["default"])
+      component: vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('Home', _pages_Cafes__WEBPACK_IMPORTED_MODULE_6__["default"])
     }, {
       path: 'cafes/new',
       name: 'newcafe',

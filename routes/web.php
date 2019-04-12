@@ -11,8 +11,10 @@
 |
 */
 
+
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/', 'Web\AppController@getApp')->name('home');
+    Route::get('/{query}', 'Web\AppController@getApp')->where('query', '.*');
 });
 
 Route::group(['middleware' => ['guest']], function () {

@@ -12,6 +12,7 @@ import Cafes from './pages/Cafes'
 import Cafe from './pages/Cafe'
 
 export default new VueRouter({
+    mode: 'history',
     routes: [
         {
             path: '/',
@@ -21,7 +22,7 @@ export default new VueRouter({
                 {
                     path: 'home',
                     name: 'home',
-                    component: Vue.component('Home', Home)
+                    component: Vue.component('Home', Cafes)
                 },
                 {
                     path: 'cafes/new',
