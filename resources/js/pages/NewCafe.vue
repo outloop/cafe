@@ -68,6 +68,9 @@
                     </span>
                     </div>
                     <div class="large-12 medium-12 small-12 cell">
+                        <tags-input v-bind:unique="key"></tags-input>
+                    </div>
+                    <div class="large-12 medium-12 small-12 cell">
                         <a class="button" v-on:click="removeLocation(key)">移除位置</a>
                     </div>
                 </div>
@@ -86,6 +89,9 @@
 
 <script>
     import {required, maxLength, url} from 'vuelidate/lib/validators'
+    import TagsInput from '../components/global/forms/TagsInput'
+    import { EventBus } from '../event-bus.js';
+
     export default {
         created(){
             this.$store.dispatch('loadBrewMethods');
@@ -129,12 +135,9 @@
                     zip: {
                         required
                     },
-                    name: {
-
-                    },
-                    methodsAvailable: {
-
-                    }
+                    name: {},
+                    methodsAvailable: {},
+                    tags:{}
                 }
             }
         },
@@ -153,6 +156,7 @@
             },
             removeLocation(key) {
                 this.locations.splice(key, 1);
+                EventBus.$emit('clear-tags');
             },
             addLocation() {
                 this.locations.push({name: '', address: '', city: '', state: '', zip: '', methodsAvailable: []});
@@ -162,6 +166,14 @@
             brewMethods() {
                 return this.$store.getters.getBrewMethods;
             }
-        }
+        },
+        components:{
+            TagsInput
+        },
+        mounted() {
+            EventBus.$on('tags-edited', function (tagsAdded) {
+                this.locations[tagsAdded.unique].tags = tagsAdded.tags;
+            }.bind(this));
+        },
     }
 </script>

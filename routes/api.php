@@ -25,6 +25,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function (){
     Route::resource('cafes', 'Api\CafesController');
     Route::post('/cafes/{cafe}/like', 'Api\CafesController@like');
     Route::delete('/cafes/{cafe}/dislike', 'Api\CafesController@dislike');
+    Route::post('/cafes/{cafe}/tag', 'Api\CafesController@addTag');
+    Route::post('/cafes/{cafe}/tag', 'Api\CafesController@deleteTag');
 
+    Route::get('/tags', 'Api\TagsController@getTags');
     Route::resource('brew-methods', 'Api\BrewMethodsController');
 });

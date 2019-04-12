@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Cafe extends Model
@@ -25,12 +24,17 @@ class Cafe extends Model
 
     public function likes()
     {
-        return $this->belongsToMany(Cafe::class, 'users_cafes_likes', 'cafe_id', 'user_id');
+        return $this->belongsToMany(Cafe::class, 'users_cafes_likes', 'cafe_id', 'cafe_id');
     }
 
     public function userLike()
     {
         return $this->belongsToMany(User::class, 'users_cafes_likes', 'cafe_id', 'user_id')->where('user_id', auth('api')->id());
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'cafes_users_tags', 'cafe_id', 'tag_id');
     }
 
 }

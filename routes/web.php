@@ -12,11 +12,6 @@
 */
 
 
-Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', 'Web\AppController@getApp')->name('home');
-    Route::get('/{query}', 'Web\AppController@getApp')->where('query', '.*');
-});
-
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/login', 'Web\AuthenticationController@getLogin')->name('login');
     Route::get('/auth/{social}', 'Web\AuthenticationController@getSocialRedirect')->name('doLogin');
@@ -24,7 +19,10 @@ Route::group(['middleware' => ['guest']], function () {
 });
 
 Route::get('/test', function (){
-    $gaode = new \App\Utilities\Maps\Gaode();
-    $res = $gaode->geocode('越秀区珠江宾馆', '广州市','广东省');
-    var_dump($res);
+    var_dump(\App\Cafe::with('likes')->get());
+});
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/', 'Web\AppController@getApp')->name('home');
+    Route::get('/{query}', 'Web\AppController@getApp')->where('query', '.*');
 });

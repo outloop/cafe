@@ -74,7 +74,7 @@ class CafesController extends Controller
     public function show($id)
     {
         //
-        $cafe = Cafe::where(['id' => $id])->with('brewMethods')->with('userLike')->first();
+        $cafe = Cafe::where(['id' => $id])->with('brewMethods')->with('userLike')->with('tags')->first();
         return response()->json($cafe);
     }
 
@@ -126,4 +126,25 @@ class CafesController extends Controller
         $cafe->likes()->detach($request->user()->id);
         return response(null, 204);
     }
+
+    public function addTag(Cafe $cafe, Request $request, CafesService $cafesService)
+    {
+        if ($cafesService->tag($cafe, $request->input('tags'), $request->user()->id)) {
+            $newCafe = $cafe->with('brewMethods')
+                ->with('userLike')
+                ->with('tags')
+                ->first();
+        } else {
+            $newCafe = [];
+        }
+        return response()->json($newCafe, 201);
+
+    }
+
+    public function deleteTag(Cafe $cafe, Request $request, CafesService $cafesService)
+    {
+        $cafesService->delTag($cafe->id, $request->input('tag'), $request->user()->id);
+        return response(null, 204);
+    }
+
 }
